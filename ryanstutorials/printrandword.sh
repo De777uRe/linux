@@ -1,6 +1,7 @@
 #!/bin/bash
 
 ifcontinue=true
+wordlen="$1"
 
 while $ifcontinue; do
 	dictloc=/usr/share/dict/words
@@ -8,11 +9,12 @@ while $ifcontinue; do
 	dictcontents=$(grep -v "'" $dictloc)
 	#echo -E Dictionary Contents after Grep: $dictcontents
 
-	if [ -z "$1" ]; then
-		echo No arguments supplied
+	if [ -z "$wordlen" ]; then
+		#echo No arguments supplied
+		:
 	else
 		#echo Word length: $1
-		dictcontents=$(grep "^[A-Za-z]\{$1\}$" <<< $dictcontents)
+		dictcontents=$(grep "^[A-Za-z]\{$wordlen\}$" <<< $dictcontents)
 		#echo Dict Contents Limit String Size: $dictcontents
 	fi
 
@@ -21,7 +23,7 @@ while $ifcontinue; do
 	#echo $numwords
 	
 	randnum=$(shuf -i 0-$numwords -n 1)
-	echo $randnum
+	#echo $randnum
 
 	#randword=$(sed -n "$randnum"p $dictloc)
 	randword=$(sed -n "$randnum"p <<< $dictcontents)
@@ -33,8 +35,9 @@ while $ifcontinue; do
 	# -r do not allow backslashes to escape any characters
 	# -s do not echo input coming from a terminal
 	read -n 1 -r -s keypressed
-	if [ "$keypressed" = '' ]; then
-		continue
+	numre='^[1-9]+$'
+	if [ "$keypressed" = '' ] || [[ $keypressed =~ $numre ]]; then
+		wordlen=$keypressed
 	else
 		ifcontinue=false
 	fi
