@@ -7,25 +7,21 @@ while $ifcontinue; do
 	dictloc=/usr/share/dict/words
 
 	dictcontents=$(grep -v "'" $dictloc)
-	#echo -E Dictionary Contents after Grep: $dictcontents
 
 	if [ -z "$wordlen" ]; then
-		#echo No arguments supplied
 		:
 	else
-		#echo Word length: $1
+		# Retrieve words within specified length from dictionary
 		dictcontents=$(grep "^[A-Za-z]\{$wordlen\}$" <<< $dictcontents)
-		#echo Dict Contents Limit String Size: $dictcontents
 	fi
 
+	# Determine how many results we received from grep
 	numwords=$(wc -l <<< $dictcontents)
 	numwords=$(echo $numwords | cut -d ' ' -f1)
-	#echo $numwords
 	
-	randnum=$(shuf -i 0-$numwords -n 1)
-	#echo $randnum
+	# Generate random number given number of words to choose from
+	randnum=$(shuf -i 1-$numwords -n 1)
 
-	#randword=$(sed -n "$randnum"p $dictloc)
 	randword=$(sed -n "$randnum"p <<< $dictcontents)
 	echo $randword
 
@@ -35,6 +31,7 @@ while $ifcontinue; do
 	# -r do not allow backslashes to escape any characters
 	# -s do not echo input coming from a terminal
 	read -n 1 -r -s keypressed
+	# Regex to detect user specifying new word length
 	numre='^[1-9]+$'
 	if [ "$keypressed" = '' ] || [[ $keypressed =~ $numre ]]; then
 		wordlen=$keypressed
