@@ -8,9 +8,9 @@ while $ifcontinue; do
 
 	dictcontents=$(grep -v "'" $dictloc)
 
-	if [ -z "$wordlen" ]; then
-		:
-	else
+  # If user specifies an argument, use it to determine
+  # length of first word returned
+	if [ ! -z "$wordlen" ]; then
 		# Retrieve words within specified length from dictionary
 		dictcontents=$(grep "^[A-Za-z]\{$wordlen\}$" <<< $dictcontents)
 	fi
@@ -31,8 +31,10 @@ while $ifcontinue; do
 	# -r do not allow backslashes to escape any characters
 	# -s do not echo input coming from a terminal
 	read -n 1 -r -s keypressed
+
 	# Regex to detect user specifying new word length
 	numre='^[1-9]+$'
+
 	if [ "$keypressed" = '' ] || [[ $keypressed =~ $numre ]]; then
 		wordlen=$keypressed
 	else
