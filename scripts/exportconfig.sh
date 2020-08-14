@@ -16,4 +16,7 @@ else
 
   echo Copying .vimrc ...
   cp ~/.vimrc $1
+
+  echo Copying .tmux.conf ...
+  cp ~/.tmux.conf $1
 fi
